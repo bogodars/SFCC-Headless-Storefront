@@ -10,6 +10,11 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { CartDrawer } from "@/components/store/CartDrawer";
+import { SiteHeader } from "@/components/store/SiteHeader";
+import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "@/hooks/use-cart";
+
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -75,20 +80,17 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
-    // Replace these placeholders with the app's name and description when first building the app.
-    // Each content route, / included, must still set its own head(). Never add og:image or
+    // Each content route, / included, sets its own head(). Never add og:image or
     // twitter:image here: every page without its own would inherit the root's preview image.
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "SFCC Headless Store" },
+      { name: "description", content: "Footwear, apparel and accessories, served live from Salesforce." },
+      { property: "og:title", content: "SFCC Headless Store" },
+      { property: "og:description", content: "Footwear, apparel and accessories, served live from Salesforce." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -96,6 +98,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -123,8 +131,23 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <CartProvider>
+        <div className="flex min-h-screen flex-col">
+          <SiteHeader />
+          <main className="flex-1">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </main>
+          <footer className="border-t border-border">
+            <div className="mx-auto flex max-w-[1600px] flex-col gap-2 px-4 py-8 md:flex-row md:items-center md:justify-between md:px-8">
+              <span className="display text-base">SFCC Headless Store</span>
+              <span className="eyebrow text-muted-foreground">Catalog served live from Salesforce</span>
+            </div>
+          </footer>
+        </div>
+        <CartDrawer />
+        <Toaster position="bottom-center" />
+      </CartProvider>
     </QueryClientProvider>
   );
 }
