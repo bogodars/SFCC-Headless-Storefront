@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, stripSearchParams, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
+import { createFileRoute, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -19,11 +19,10 @@ import {
   type CatalogFilters,
 } from "@/lib/catalog";
 import { productsQueryOptions } from "@/lib/catalog-query";
-import { catalogSearchDefaults, catalogSearchSchema, type CatalogSearch } from "@/lib/catalog-search";
+import { catalogSearchSchema, type CatalogSearch } from "@/lib/catalog-search";
 
 export const Route = createFileRoute("/")({
   validateSearch: zodValidator(catalogSearchSchema),
-  search: { middlewares: [stripSearchParams(catalogSearchDefaults)] },
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQueryOptions),
   head: () => ({
     meta: [
