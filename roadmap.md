@@ -7,8 +7,9 @@
 
 # Checkout
 
-- [ ] Add `/checkout` with a validated customer form and full order summary.
-- [ ] Create a Salesforce Lead with an order number and itemized order description.
-- [ ] Clear the cart after success and show the order confirmation.
-- [ ] Test validation, pricing, submission, confirmation, and cart clearing.
-- [ ] Remove the verification Lead, confirm a clean build, and commit.
+- [x] Add `/checkout` with a validated customer form and full order summary.
+- [x] Create a Salesforce Lead with an order number and itemized order description.
+- [x] Clear the cart after success and show the order confirmation.
+- [x] Test validation, pricing, submission, confirmation, and cart clearing.
+- [ ] Remove verification Lead ORD-CCB47 (deletion was not approved).
+- [x] Confirm a clean build and commit.
