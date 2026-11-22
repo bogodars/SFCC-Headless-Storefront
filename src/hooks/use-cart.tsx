@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 import {
   addItem as addCartItem,
@@ -28,6 +36,7 @@ interface CartContextValue {
   removeItem: (lineId: string) => void;
   applyPromo: (code: string) => boolean;
   clearPromo: () => void;
+  clearCart: () => void;
   quantityInCart: (lineId: string) => number;
 }
 
@@ -56,7 +65,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!loaded) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    if (cart.items.length === 0 && cart.promoCode === null) {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } else {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    }
   }, [cart, loaded]);
 
   const addItem = useCallback((item: NewCartItem, quantity = 1) => {
@@ -74,6 +87,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return valid !== null;
   }, []);
   const clearPromo = useCallback(() => setCart((c) => ({ ...c, promoCode: null })), []);
+  const clearCart = useCallback(() => setCart({ items: [], promoCode: null }), []);
 
   const value = useMemo<CartContextValue>(
     () => ({
@@ -87,9 +101,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem,
       applyPromo,
       clearPromo,
+      clearCart,
       quantityInCart: (lineId) => cart.items.find((i) => i.lineId === lineId)?.quantity ?? 0,
     }),
-    [cart, isOpen, addItem, updateQuantity, removeItem, applyPromo, clearPromo],
+    [cart, isOpen, addItem, updateQuantity, removeItem, applyPromo, clearPromo, clearCart],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

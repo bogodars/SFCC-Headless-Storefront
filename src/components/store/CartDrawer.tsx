@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Minus, Plus, ShoppingBag, Tag, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -10,7 +9,17 @@ import { formatPrice } from "@/lib/catalog";
 import { PROMO_CODES } from "@/lib/cart";
 
 export function CartDrawer() {
-  const { items, isOpen, setOpen, totals, promoCode, updateQuantity, removeItem, applyPromo, clearPromo } = useCart();
+  const {
+    items,
+    isOpen,
+    setOpen,
+    totals,
+    promoCode,
+    updateQuantity,
+    removeItem,
+    applyPromo,
+    clearPromo,
+  } = useCart();
   const [code, setCode] = useState("");
   const [promoError, setPromoError] = useState<string | null>(null);
 
@@ -29,14 +38,19 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
-      <SheetContent side="right" className="flex w-full flex-col gap-0 border-l border-foreground p-0 sm:max-w-md">
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 border-l border-foreground p-0 sm:max-w-md"
+      >
         <div className="flex items-center justify-between border-b border-border px-6 py-5 pr-14">
           <SheetTitle className="display text-2xl">Your cart</SheetTitle>
           <span className="eyebrow text-muted-foreground">
             {totals.itemCount} {totals.itemCount === 1 ? "item" : "items"}
           </span>
         </div>
-        <SheetDescription className="sr-only">Review the items in your cart and proceed to checkout.</SheetDescription>
+        <SheetDescription className="sr-only">
+          Review the items in your cart and proceed to checkout.
+        </SheetDescription>
 
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
@@ -57,7 +71,13 @@ export function CartDrawer() {
                     onClick={() => setOpen(false)}
                     className="block h-28 w-20 shrink-0 overflow-hidden bg-image-bg"
                   >
-                    {item.imageUrl && <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" />}
+                    {item.imageUrl && (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
                   </Link>
                   <div className="flex min-w-0 flex-1 flex-col">
                     <div className="flex items-start justify-between gap-3">
@@ -86,7 +106,10 @@ export function CartDrawer() {
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="w-8 text-center font-mono text-sm tabular-nums" aria-live="polite">
+                        <span
+                          className="w-8 text-center font-mono text-sm tabular-nums"
+                          aria-live="polite"
+                        >
                           {item.quantity}
                         </span>
                         <button
@@ -100,9 +123,13 @@ export function CartDrawer() {
                         </button>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm tabular-nums">{formatPrice(item.price * item.quantity)}</p>
+                        <p className="text-sm tabular-nums">
+                          {formatPrice(item.price * item.quantity)}
+                        </p>
                         {item.quantity >= item.maxStock && (
-                          <p className="eyebrow mt-0.5 text-signal">Max {item.maxStock} available</p>
+                          <p className="eyebrow mt-0.5 text-signal">
+                            Max {item.maxStock} available
+                          </p>
                         )}
                       </div>
                     </div>
@@ -119,7 +146,11 @@ export function CartDrawer() {
                     <span className="font-mono font-semibold">{promoCode}</span>
                     <span className="text-muted-foreground">· {rate}% off</span>
                   </span>
-                  <button type="button" onClick={clearPromo} className="eyebrow cursor-pointer underline underline-offset-4">
+                  <button
+                    type="button"
+                    onClick={clearPromo}
+                    className="eyebrow cursor-pointer underline underline-offset-4"
+                  >
                     Remove
                   </button>
                 </div>
@@ -166,12 +197,10 @@ export function CartDrawer() {
                 </div>
               </dl>
 
-              <Button
-                size="lg"
-                className="mt-5 w-full"
-                onClick={() => toast("Checkout is coming next", { description: "Order submission to Salesforce will be connected in the next step." })}
-              >
-                Proceed to checkout
+              <Button size="lg" className="mt-5 w-full" asChild>
+                <Link to="/checkout" onClick={() => setOpen(false)}>
+                  Proceed to checkout
+                </Link>
               </Button>
             </div>
           </>
